@@ -21,25 +21,24 @@ species restaurant {
 	float lon;
 	point rest;
 	aspect base {
-		draw circle(5) color: color;
+		draw triangle(50) color: color;
 	}
 
 }
 
 species pedido {
-	rgb color_solicitando <- #blue;
-	rgb color_entregado <- #blue;
+	rgb color <- #blue;
 	float lat;
 	float lon;
 	point rest;
-
+	action entregado{
+		color<-#green;
+	}
 	aspect solicitando {
-		draw circle(5) color: color_solicitando;
+		draw circle(30) color: color;
 	}
-
-	aspect entregado {
-		draw circle(5) color: color_entregado;
-	}
+	
+	
 
 }
 
@@ -141,9 +140,10 @@ species intersection skills: [intersection_skill] {
 }
 
 species base_vehicle skills: [driving] {
-	rgb color <- rnd_color(255);
+	rgb color <- #yellow;
 	graph road_graph;
 	point pos;
+	bool entregado<-false;
 	
 	point compute_position {
 	// Shifts the position of the vehicle perpendicularly to the road,
@@ -162,11 +162,16 @@ species base_vehicle skills: [driving] {
 
 	}
 	
+	action entregar{
+		color<-#green;
+	}
+	
 	aspect base {
 		if (current_road != nil) {
 			pos <- compute_position();
-			draw rectangle(vehicle_length, lane_width * num_lanes_occupied) at: pos color: color rotate: heading border: #black;
-			draw triangle(lane_width * num_lanes_occupied) at: pos color: #white rotate: heading + 90 border: #black;
+			draw rectangle(20,40) color: color rotate: heading + 90 border: #black;
+			//draw rectangle(vehicle_length, lane_width * num_lanes_occupied) at: pos color: color rotate: heading border: #black;
+			//draw triangle(lane_width * num_lanes_occupied) at: pos color: #white rotate: heading + 90 border: #black;
 		}
 
 	}
