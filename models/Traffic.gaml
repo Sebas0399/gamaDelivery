@@ -10,9 +10,8 @@ global {
 // This is for visualization purposes only, 
 // the width of a vehicle is specified using num_lanes_occupied
 	float lane_width <- 0.7;
-		list<intersection> non_deadend_nodes;
-		list<restaurant>restDisponibles;
-	
+	list<intersection> non_deadend_nodes;
+	list<restaurant> restDisponibles;
 }
 
 species restaurant {
@@ -20,8 +19,11 @@ species restaurant {
 	float lat;
 	float lon;
 	point rest;
+	string nombre;
+
 	aspect base {
 		draw triangle(50) color: color;
+		draw string(nombre) color: #black font: font("SansSerif", 50, #bold);
 	}
 
 }
@@ -31,14 +33,14 @@ species pedido {
 	float lat;
 	float lon;
 	point rest;
-	action entregado{
-		color<-#green;
+
+	action entregado {
+		color <- #green;
 	}
+
 	aspect solicitando {
 		draw circle(30) color: color;
 	}
-	
-	
 
 }
 
@@ -130,7 +132,7 @@ species intersection skills: [intersection_skill] {
 
 	aspect base {
 		if (is_traffic_signal) {
-			draw circle(1) color: color_fire;
+			draw triangle(30) color: color_fire;
 		} else {
 			draw circle(1) color: color;
 		}
@@ -143,8 +145,8 @@ species base_vehicle skills: [driving] {
 	rgb color <- #yellow;
 	graph road_graph;
 	point pos;
-	bool entregado<-false;
-	
+	bool entregado <- false;
+	string operador;
 	point compute_position {
 	// Shifts the position of the vehicle perpendicularly to the road,
 	// in order to visualize different lanes
@@ -161,15 +163,19 @@ species base_vehicle skills: [driving] {
 		}
 
 	}
-	
-	action entregar{
-		color<-#green;
+
+	action entregar {
+		color <- #green;
 	}
-	
+
 	aspect base {
 		if (current_road != nil) {
 			pos <- compute_position();
-			draw rectangle(20,40) color: color rotate: heading + 90 border: #black;
+			if (operador = "Rappi") {
+				draw rectangle(20, 40) color:#green rotate: heading + 90 border: #black;
+			} else {
+				draw triangle(20, 40) color: #red rotate: heading + 90 border: #black;
+			}
 			//draw rectangle(vehicle_length, lane_width * num_lanes_occupied) at: pos color: color rotate: heading border: #black;
 			//draw triangle(lane_width * num_lanes_occupied) at: pos color: #white rotate: heading + 90 border: #black;
 		}

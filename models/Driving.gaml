@@ -14,6 +14,7 @@ global {
 	graph road_network;
 	list<point> restaurantes;
 	list<point> pedidos;
+	list<string>operadoras<-["Rappi","Glovo","Pedidos Ya"];
 	bool rain;
 
 	init {
@@ -30,11 +31,12 @@ global {
 		}
 
 		create intersection from: shp_nodes with: [is_traffic_signal::(read("type") = "traffic_signals")] {
-			time_to_change <- 30*3600 #s;
+			time_to_change <- 260 #s;
 		}
 
-		create restaurant from: restaurants_csv with: [lat::float(get("latitude")), lon::float(get("longitude"))] {
+		create restaurant from: restaurants_csv with: [lat::float(get("latitude")), lon::float(get("longitude")),nombre::string(get("location_name"))] {
 			location <- to_GAMA_CRS({lon, lat}, "EPSG:4326").location;
+			
 			add location to: restaurantes;
 		}
 
@@ -52,7 +54,7 @@ global {
 			do initialize;
 		}
 
-		create vehicle_following_path number: 1 with: (vehicle_max_speed: vehicle_speed_limit);
+		create vehicle_following_path number: 50 with: (vehicle_max_speed: vehicle_speed_limit);
 	} }
 
 species vehicle_following_path parent: base_vehicle {
@@ -61,6 +63,8 @@ species vehicle_following_path parent: base_vehicle {
 	
 
 	init {
+		
+		operador<-operadoras[rnd(2)];
 		vehicle_length <- 1.9 #m;
 		if (rain) {
 			
@@ -74,7 +78,7 @@ species vehicle_following_path parent: base_vehicle {
 	}
 
 	reflex select_next_path when: current_path = nil {
-					list<intersection> dst_nodes <- [intersection[rnd(3017)], restaurantes[rnd(8)] as intersection, pedidos[rnd(32)] as intersection];
+		list<intersection> dst_nodes <- [intersection[rnd(3017)], restaurantes[rnd(8)] as intersection, pedidos[rnd(32)] as intersection];
 		
 		do compute_path graph: road_network nodes: dst_nodes;
 	}
