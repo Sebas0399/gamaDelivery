@@ -147,6 +147,8 @@ species base_vehicle skills: [driving] {
 	point pos;
 	bool entregado <- false;
 	string operador;
+	int num<-rnd(50);
+
 	point compute_position {
 	// Shifts the position of the vehicle perpendicularly to the road,
 	// in order to visualize different lanes
@@ -178,6 +180,7 @@ species base_vehicle skills: [driving] {
 			}
 			//draw rectangle(vehicle_length, lane_width * num_lanes_occupied) at: pos color: color rotate: heading border: #black;
 			//draw triangle(lane_width * num_lanes_occupied) at: pos color: #white rotate: heading + 90 border: #black;
+			draw rectangle(20,40) color: color rotate: heading + 90 border: #black;			
 		}
 
 	}
