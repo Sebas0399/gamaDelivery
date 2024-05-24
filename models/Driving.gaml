@@ -4,6 +4,7 @@ import "./Traffic.gaml"
 
 global {
 	float step <- 5.0;
+	list<intersection> dst_nodes;
 	float vehicle_speed_limit;
 	string map_name <- "Centro";
 	file shp_roads <- file("../includes/" + map_name + "/roads.shp");
@@ -14,8 +15,10 @@ global {
 	graph road_network;
 	list<point> restaurantes;
 	list<point> pedidos;
-	list<string>operadoras<-["Rappi","Glovo","Pedidos Ya"];
 	bool rain;
+	int pedidosEntregados <- 0;
+	int pedidosNoEntregados <- 0;
+	int vehiculos <- 50;
 
 	init {
 		create road from: shp_roads with: [num_lanes::int(read("lanes"))] {
@@ -34,9 +37,8 @@ global {
 			time_to_change <- 260 #s;
 		}
 
-		create restaurant from: restaurants_csv with: [lat::float(get("latitude")), lon::float(get("longitude")),nombre::string(get("location_name"))] {
+		create restaurant from: restaurants_csv with: [lat::float(get("latitude")), lon::float(get("longitude")), nombre::string(get("location_name"))] {
 			location <- to_GAMA_CRS({lon, lat}, "EPSG:4326").location;
-			
 			add location to: restaurantes;
 		}
 
@@ -54,32 +56,29 @@ global {
 			do initialize;
 		}
 
-		create vehicle_following_path number: 50 with: (vehicle_max_speed: vehicle_speed_limit);
+		create vehicle_following_path number: vehiculos with: (vehicle_max_speed: vehicle_speed_limit);
 	} }
 
 species vehicle_following_path parent: base_vehicle {
 	float timer <- 0.0 #minute; // Add a timer variable
 	float vehicle_max_speed;
-	
+	point destinoFinal <- pedidos[32];
 
 	init {
-		
-		operador<-operadoras[rnd(2)];
 		vehicle_length <- 1.9 #m;
+		write (rain);
 		if (rain) {
-			
-			max_speed <-  40 / 3600;
+			max_speed <- 40 / 3600;
+			max_acceleration <- 3.0;
 		} else {
 			max_speed <- 50 / 3600;
+			max_acceleration <- 3.5;
 		}
 
-		max_acceleration <- 3.5;
-	
 	}
 
 	reflex select_next_path when: current_path = nil {
-		list<intersection> dst_nodes <- [intersection[rnd(3017)], restaurantes[rnd(8)] as intersection, pedidos[rnd(32)] as intersection];
-		
+		dst_nodes <- [intersection[rnd(3017)], restaurantes[rnd(8)] as intersection, destinoFinal as intersection];
 		do compute_path graph: road_network nodes: dst_nodes;
 	}
 
@@ -90,7 +89,15 @@ species vehicle_following_path parent: base_vehicle {
 
 	reflex stop when: current_path = nil {
 		int t_final <- (timer / 60) as int;
-		write ("Tiempo: " + t_final + " minutos");
+		if (t_final > 30) {
+			pedidosNoEntregados <- pedidosNoEntregados + 1;
+			write ("Pedido no entregado");
+		} else {
+			pedidosEntregados <- pedidosEntregados + 1;
+			write ("Tiempo: " + t_final + " minutos");
+		}
+
+		vehiculos <- vehiculos - 1;
 		do die;
 	}
 
@@ -98,15 +105,28 @@ species vehicle_following_path parent: base_vehicle {
 
 experiment city_rain type: gui {
 	parameter var: rain init: false;
+	float seedValue <- 10.0;
+	float seed <- seedValue; // force the value of the seed.
+	init {
+	// create a second simulation with the same seed as the main simulation
+		create simulation with: [seed::seedValue, rain::true];
+	}
 
 	output synchronized: true {
-		
-		display map type: 2d background: rain?#green:#grey {
+		display map type: 2d background: rain ? #green : #grey {
 			species road aspect: base;
 			species vehicle_following_path aspect: base;
 			species intersection aspect: base;
 			species restaurant aspect: base;
-			species pedido aspect: solicitando;
+			species pedido aspect: base;
+		}
+
+		display chart_display refresh: every(10 #cycles) type: 2d {
+			chart "Entrega de Pedidos" type: pie style:exploded size: {1, 0.5} position: {0, 0} {
+				data "Pedidos" value: pedidosEntregados  color: #green;
+				data "Pedidos No entregados" value: pedidosNoEntregados color: #red;
+			}
+
 		}
 
 	}

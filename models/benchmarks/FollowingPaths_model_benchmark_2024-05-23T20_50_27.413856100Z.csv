@@ -1,0 +1,479 @@
+Execution;Time in ms in Scope #634 of city_rain(0);Invocations in Scope #634 of city_rain(0);Time in ms in Scope #640 of FollowingPaths_model(0) (of display map);Invocations in Scope #640 of FollowingPaths_model(0) (of display map);Time in ms in Scope #643 of FollowingPaths_model(1);Invocations in Scope #643 of FollowingPaths_model(1);Time in ms in Scope #646 of FollowingPaths_model(1) (of display map (S1));Invocations in Scope #646 of FollowingPaths_model(1) (of display map (S1));Time in ms in Scope #649 of city_rain(0) (of display chart_display);Invocations in Scope #649 of city_rain(0) (of display chart_display);Time in ms in Scope #648 of FollowingPaths_model(1) (in java2D display );Invocations in Scope #648 of FollowingPaths_model(1) (in java2D display );Time in ms in Scope #642 of FollowingPaths_model(0) (in java2D display );Invocations in Scope #642 of FollowingPaths_model(0) (in java2D display );Time in ms in Scope #633 (in ExperimentPlan);Invocations in Scope #633 (in ExperimentPlan);Time in ms in Scope #637 of FollowingPaths_model(0);Invocations in Scope #637 of FollowingPaths_model(0)
+model FollowingPaths
+
+global ;;;;;;;;;;;;;;;;;;
+list<FollowingPaths_model> peers ;;;;;0;1;;;;;;;;;;;0;1
+-199;;;;;;;;;;;;;;;;;;
+experiment host ;;;;;0;1;;;;;;;;;;;0;1
+-29;;;;;;;;;;;;;;;;;;
+experiment experiment ;;;;;0;1;;;;;;;;;;;0;1
+-31;;;;;;;;;;;;;;;;;;
+FollowingPaths_model world ;;;;;0;1;;;;;;;;;;;0;1
+-27;;;;;;;;;;;;;;;;;;
+float lane_width <- 0.7 ;;;;;0;1;;;;;;;;;;;0;1
+list<intersection> non_deadend_nodes ;;;;;0;1;;;;;;;;;;;0;1
+list<restaurant> restDisponibles ;;;;;0;1;;;;;;;;;;;0;1
+float step <- 5.0 ;;;;;0;1;;;;;;;;;;;0;1
+list<intersection> dst_nodes ;;;;;0;1;;;;;;;;;;;0;1
+float vehicle_speed_limit ;;;;;0;1;;;;;;;;;;;0;1
+string map_name <- 'Centro' ;;;;;0;1;;;;;;;;;;;0;1
+file<unknown, string> shp_roads <- file<unknown, string>(('../includes/' + map_name) + '/roads.shp') ;;;;;1;1;;;;;;;;;;;2;1
+file<unknown, string>(('../includes/' + map_name) + '/roads.shp');;;;;1;1;;;;;;;;;;;2;1
+('../includes/' + map_name) + '/roads.shp';;;;;0;1;;;;;;;;;;;0;1
+'../includes/' + map_name;;;;;0;1;;;;;;;;;;;0;1
+file<unknown, string> shp_nodes <- file<unknown, string>(('../includes/' + map_name) + '/nodes.shp') ;;;;;1;1;;;;;;;;;;;1;1
+file<unknown, string>(('../includes/' + map_name) + '/nodes.shp');;;;;1;1;;;;;;;;;;;1;1
+('../includes/' + map_name) + '/nodes.shp';;;;;0;1;;;;;;;;;;;0;1
+'../includes/' + map_name;;;;;0;1;;;;;;;;;;;0;1
+file<point, unknown> restaurants_csv <- csv_file(('../includes/' + map_name) + '/restaurants.csv',true) ;;;;;2;1;;;;;;;;;;;1;1
+csv_file(('../includes/' + map_name) + '/restaurants.csv',true);;;;;2;1;;;;;;;;;;;1;1
+('../includes/' + map_name) + '/restaurants.csv';;;;;0;1;;;;;;;;;;;0;1
+'../includes/' + map_name;;;;;0;1;;;;;;;;;;;0;1
+file<point, unknown> pedidos_csv <- csv_file(('../includes/' + map_name) + '/pedidos.csv',true) ;;;;;1;1;;;;;;;;;;;2;1
+csv_file(('../includes/' + map_name) + '/pedidos.csv',true);;;;;1;1;;;;;;;;;;;2;1
+('../includes/' + map_name) + '/pedidos.csv';;;;;0;1;;;;;;;;;;;0;1
+'../includes/' + map_name;;;;;0;1;;;;;;;;;;;0;1
+geometry shape <- envelope(shp_roads) + float(50) ;;;;;6;1;;;;;;;;;;;6;1
+envelope(shp_roads) + float(50);;;;;6;1;;;;;;;;;;;6;1
+envelope(shp_roads);;;;;6;1;;;;;;;;;;;5;1
+float(50);;;;;0;1;;;;;;;;;;;0;1
+graph road_network ;;;;;0;1;;;;;;;;;;;0;1
+list<point> restaurantes ;;;;;0;1;;;;;;;;;;;0;1
+list<point> pedidos ;;;;;0;1;;;;;;;;;;;0;1
+bool rain ;;;;;0;1;;;;;;;;;;;0;1
+int pedidosEntregados <- 0 ;;;;;0;1;;;;;;;;;;;0;1
+int pedidosNoEntregados <- 0 ;;;;;0;1;;;;;;;;;;;0;1
+int vehiculos <- 20 ;;;;;0;1;;;;;;;;;;;0;1
+list<restaurant> restaurant ;;;;;1;1;;;;;;;;;;;0;1
+list<pedido> pedido ;;;;;0;1;;;;;;;;;;;0;1
+list<road> road ;;;;;0;1;;;;;;;;;;;0;1
+list<intersection> intersection ;;;;;0;1;;;;;;;;;;;0;1
+list<base_vehicle> base_vehicle ;;;;;0;1;;;;;;;;;;;0;1
+list<vehicle_following_path> vehicle_following_path ;;;;;0;1;;;;;;;;;;;1;1
+species restaurant ;;;;;;;;;;;;;;;;;;
+list<restaurant> peers ;;;;;0;9;;;;;;;;;;;0;9
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;0;9;;;;;;;;;;;0;9
+-29;;;;;;;;;;;;;;;;;;
+rgb color <- #red ;;;;;0;9;;;;;;;;;;;0;9
+float lat ;;;;;0;9;;;;;;;;;;;0;9
+float lon ;;;;;0;9;;;;;;;;;;;0;9
+point rest ;;;;;0;9;;;;;;;;;;;0;9
+string nombre ;;;;;0;9;;;;;;;;;;;0;9
+aspect base ;;;;;;;;;;;4;63;0;54;;;;
+draw triangle(float(50)) delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: color ;;;;;;;;;;;2;63;0;54;;;;
+triangle(float(50));;;;;;;;;;;0;63;0;54;;;;
+float(50);;;;;;;;;;;0;63;0;54;;;;
+draw string(nombre) delegate: msi.gaml.statements.draw.TextDrawer@5af9fa5f color: #black font: font('SansSerif',10,#bold) ;;;;;;;;;;;2;63;0;54;;;;
+string(nombre);;;;;;;;;;;0;63;0;54;;;;
+font('SansSerif',10,#bold);;;;;;;;;;;;;;;;;;
+species pedido ;;;;;;;;;;;;;;;;;;
+list<pedido> peers ;;;;;0;33;;;;;;;;;;;0;33
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;0;33;;;;;;;;;;;0;33
+-29;;;;;;;;;;;;;;;;;;
+float lat ;;;;;0;33;;;;;;;;;;;0;33
+float lon ;;;;;0;33;;;;;;;;;;;0;33
+point rest ;;;;;0;33;;;;;;;;;;;0;33
+aspect base ;;;;;;;;;;;9;231;8;198;;;;
+draw circle(float(30)) delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: #blue ;;;;;;;;;;;9;231;8;198;;;;
+circle(float(30));;;;;;;;;;;8;231;7;198;;;;
+float(30);;;;;;;;;;;0;231;1;198;;;;
+aspect entregado ;;;;;;;;;;;;;;;;;;
+draw circle(float(30)) delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: #green ;;;;;;;;;;;;;;;;;;
+circle(float(30));;;;;;;;;;;;;;;;;;
+float(30);;;;;;;;;;;;;;;;;;
+aspect cancelado ;;;;;;;;;;;;;;;;;;
+draw circle(float(30)) delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: #red ;;;;;;;;;;;;;;;;;;
+circle(float(30));;;;;;;;;;;;;;;;;;
+float(30);;;;;;;;;;;;;;;;;;
+species road skills: [road_skill] ;;;;;;;;;;;;;;;;;;
+[road_skill];;;;;;;;;;;;;;;;;;
+list<road> peers ;;;;;6;6932;;;;;;;;;;;10;6932
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;0;6932;;;;;;;;;;;1;6932
+-29;;;;;;;;;;;;;;;;;;
+list<agent> all_agents ;;;;;39;6932;;;;;;;;;;;3;6932
+list segment_lengths ;;;;;4;6932;;;;;;;;;;;6;6932
+agent source_node ;;;;;3;6932;;;;;;;;;;;0;6932
+float maxspeed <- (50 * #km) / #h ;;;;;11;6932;;;;;;;;;;;7;6932
+(50 * #km) / #h;;;;;4;3466;;;;;;;;;;;2;3466
+50 * #km;;;;;4;3466;;;;;;;;;;;1;3466
+agent target_node ;;;;;1;6932;;;;;;;;;;;2;6932
+list vehicle_ordering ;;;;;6;6932;;;;;;;;;;;5;6932
+int num_segments ;;;;;0;6932;;;;;;;;;;;3;6932
+list<list> agents_on ;;;;;4;6932;;;;;;;;;;;4;6932
+int num_lanes <- 2 ;;;;;2;6932;;;;;;;;;;;7;6932
+road linked_road ;;;;;1;6932;;;;;;;;;;;0;6932
+-199;;;;;;;;;;;;;;;;;;
+rgb color <- #white ;;;;;6;6932;;;;;;;;;;;1;6932
+string oneway ;;;;;0;6932;;;;;;;;;;;2;6932
+bool register (11 agent, 1 lane);;;;;;;;;;;;;;;;;;
+bool unregister (11 agent);;;;;;;;;;;;;;;;;;
+aspect base ;;;;;;;;;;;381;48524;324;41592;;;;
+draw shape delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: color end_arrow: 1 ;;;;;;;;;;;365;48524;312;41592;;;;
+species intersection skills: [intersection_skill] ;;;;;;;;;;;;;;;;;;
+[intersection_skill];;;;;;;;;;;;;;;;;;
+list<intersection> peers ;;;;;2;3018;;;;;;;;;;;2;3018
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;0;3018;;;;;;;;;;;0;3018
+-29;;;;;;;;;;;;;;;;;;
+list<agent> roads_in ;;;;;1;3018;;;;;;;;;;;3;3018
+map block ;;;;;0;3018;;;;;;;;;;;1;3018
+list<list> stop ;;;;;4;3018;;;;;;;;;;;0;3018
+list<agent> roads_out ;;;;;1;3018;;;;;;;;;;;2;3018
+list<agent> priority_roads ;;;;;0;3018;;;;;;;;;;;1;3018
+rgb color ;;;;;0;3018;;;;;;;;;;;1;3018
+bool is_traffic_signal ;;;;;0;3018;;;;;;;;;;;0;3018
+float time_to_change <- 30 * #sec ;;;;;2;3018;;;;;;;;;;;1;3018
+30 * #sec;;;;;0;3018;;;;;;;;;;;0;3018
+float counter <- rnd(time_to_change) ;;;;;0;3018;;;;;;;;;;;2;3018
+rnd(time_to_change);;;;;0;3018;;;;;;;;;;;1;3018
+list<road> ways1 ;;;;;4;3018;;;;;;;;;;;0;3018
+list<road> ways2 ;;;;;1;3018;;;;;;;;;;;1;3018
+bool is_green ;;;;;2;3018;;;;;;;;;;;1;3018
+rgb color_fire ;;;;;1;3018;;;;;;;;;;;0;3018
+action initialize ;;;;;10;3018;;;;;;;;;;;10;3018
+if is_traffic_signal ;;;;;9;3018;;;;;;;;;;;7;3018
+do compute_crossing ;;;;;7;98;;;;;;;;;;;5;98
+add [] to: stop ;;;;;1;98;;;;;;;;;;;0;98
+[];;;;;0;98;;;;;;;;;;;0;98
+if flip(0.5) ;;;;;0;98;;;;;;;;;;;0;98
+flip(0.5);;;;;0;98;;;;;;;;;;;0;98
+else ;;;;;0;53;;;;;;;;;;;0;53
+do to_red ;;;;;0;53;;;;;;;;;;;0;53
+do to_green ;;;;;0;45;;;;;;;;;;;0;45
+action compute_crossing ;;;;;7;98;;;;;;;;;;;5;98
+if length(roads_in) >= 2 ;;;;;4;98;;;;;;;;;;;5;98
+length(roads_in) >= 2;;;;;0;98;;;;;;;;;;;0;98
+length(roads_in);;;;;0;98;;;;;;;;;;;0;98
+let rd0 type: road value: road(roads_in[0]) ;;;;;0;95;;;;;;;;;;;0;95
+road(roads_in[0]);;;;;0;95;;;;;;;;;;;0;95
+roads_in[0];;;;;0;95;;;;;;;;;;;0;95
+[0];;;;;0;95;;;;;;;;;;;0;95
+let pts type: list<point> value: rd0.shape.points ;;;;;1;95;;;;;;;;;;;0;95
+rd0.shape.points;;;;;0;95;;;;;;;;;;;0;95
+rd0.shape;;;;;0;95;;;;;;;;;;;0;95
+let ref_angle type: float value: direction_to(last(pts),rd0.location) ;;;;;0;95;;;;;;;;;;;0;95
+direction_to(last(pts),rd0.location);;;;;0;95;;;;;;;;;;;0;95
+last(pts);;;;;0;95;;;;;;;;;;;0;95
+rd0.location;;;;;0;95;;;;;;;;;;;0;95
+loop rd over: roads_in ;;;;;3;95;;;;;;;;;;;4;95
+let pts2 type: list<point> value: road(rd).shape.points ;;;;;0;277;;;;;;;;;;;1;277
+road(rd).shape.points;;;;;0;277;;;;;;;;;;;1;277
+road(rd).shape;;;;;0;277;;;;;;;;;;;1;277
+road(rd);;;;;0;277;;;;;;;;;;;1;277
+let angle_dest type: float value: direction_to(last(pts2),rd.location) ;;;;;0;277;;;;;;;;;;;1;277
+direction_to(last(pts2),rd.location);;;;;0;277;;;;;;;;;;;1;277
+last(pts2);;;;;0;277;;;;;;;;;;;0;277
+rd.location;;;;;0;277;;;;;;;;;;;0;277
+let ang type: float value: abs(angle_dest - ref_angle) ;;;;;0;277;;;;;;;;;;;1;277
+abs(angle_dest - ref_angle);;;;;0;277;;;;;;;;;;;1;277
+angle_dest - ref_angle;;;;;0;277;;;;;;;;;;;0;277
+if ((ang > 45) and (ang < 135)) or ((ang > 225) and (ang < 315)) ;;;;;3;277;;;;;;;;;;;1;277
+((ang > 45) and (ang < 135)) or ((ang > 225) and (ang < 315));;;;;2;277;;;;;;;;;;;0;277
+(ang > 45) and (ang < 135);;;;;1;277;;;;;;;;;;;0;277
+ang > 45;;;;;0;277;;;;;;;;;;;0;277
+ang < 135;;;;;0;178;;;;;;;;;;;0;178
+(ang > 225) and (ang < 315);;;;;1;210;;;;;;;;;;;0;210
+ang > 225;;;;;0;210;;;;;;;;;;;0;210
+ang < 315;;;;;0;17;;;;;;;;;;;0;17
+add road(rd) to: ways2 ;;;;;1;84;;;;;;;;;;;1;84
+road(rd);;;;;0;84;;;;;;;;;;;0;84
+loop rd over: roads_in ;;;;;3;98;;;;;;;;;;;0;98
+if not(rd in ways2) ;;;;;1;280;;;;;;;;;;;0;280
+not(rd in ways2);;;;;0;280;;;;;;;;;;;0;280
+rd in ways2;;;;;0;280;;;;;;;;;;;0;280
+add road(rd) to: ways1 ;;;;;1;196;;;;;;;;;;;0;196
+road(rd);;;;;0;196;;;;;;;;;;;0;196
+action to_green ;;;;;0;45;;;;;;;;;;;0;45
+put ways2 at: 0 to: stop ;;;;;0;45;;;;;;;;;;;0;45
+set color_fire value: #green ;;;;;0;45;;;;;;;;;;;0;45
+set is_green value: true ;;;;;0;45;;;;;;;;;;;0;45
+action to_red ;;;;;0;53;;;;;;;;;;;0;53
+put ways1 at: 0 to: stop ;;;;;0;53;;;;;;;;;;;0;53
+set color_fire value: #red ;;;;;0;53;;;;;;;;;;;0;53
+set is_green value: false ;;;;;0;53;;;;;;;;;;;0;53
+reflex dynamic_node when: is_traffic_signal ;;;;;;;;;;;;;;;;;;
+set counter value: counter + step ;;;;;;;;;;;;;;;;;;
+counter + step;;;;;;;;;;;;;;;;;;
+if counter >= time_to_change ;;;;;;;;;;;;;;;;;;
+counter >= time_to_change;;;;;;;;;;;;;;;;;;
+set counter value: 0.0 ;;;;;;;;;;;;;;;;;;
+if is_green ;;;;;;;;;;;;;;;;;;
+else ;;;;;;;;;;;;;;;;;;
+do to_green ;;;;;;;;;;;;;;;;;;
+do to_red ;;;;;;;;;;;;;;;;;;
+aspect base ;;;;;;;;;;;717;21126;616;18108;;;;
+if is_traffic_signal ;;;;;;;;;;;708;21126;605;18108;;;;
+else ;;;;;;;;;;;672;20440;587;17520;;;;
+draw circle(float(1)) delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: color ;;;;;;;;;;;660;20440;579;17520;;;;
+circle(float(1));;;;;;;;;;;486;20440;432;17520;;;;
+float(1);;;;;;;;;;;18;20440;13;17520;;;;
+draw triangle(float(30)) delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 color: color_fire ;;;;;;;;;;;2;686;2;588;;;;
+triangle(float(30));;;;;;;;;;;0;686;0;588;;;;
+float(30);;;;;;;;;;;0;686;0;588;;;;
+species base_vehicle skills: [driving] ;;;;;;;;;;;;;;;;;;
+[driving];;;;;;;;;;;;;;;;;;
+list<base_vehicle> peers ;;;;;;;;;;;;;;;;;;
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;;;;;;;;;;;;;;
+-29;;;;;;;;;;;;;;;;;;
+float real_speed <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+float heading <- rnd(360.0) ;;;;;0;20;;;;;;;;;;;0;20
+rnd(360.0);;;;;0;20;;;;;;;;;;;0;20
+point destination ;;;;;0;20;;;;;;;;;;;1;20
+point location ;;;;;;;;;;;;;;;;;;
+path current_path <- nil ;;;;;0;20;;;;;;;;;;;0;20
+geometry current_edge <- nil ;;;;;0;20;;;;;;;;;;;0;20
+float speed <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+float proba_use_linked_road <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+list<point> targets <- [] ;;;;;0;20;;;;;;;;;;;0;20
+[];;;;;0;60;;;;;;;;;;;0;60
+float security_distance_coeff <- 1.0 ;;;;;0;20;;;;;;;;;;;0;20
+float proba_lane_change_up <- 1.0 ;;;;;0;20;;;;;;;;;;;0;20
+float leading_speed <- nil ;;;;;0;20;;;;;;;;;;;0;20
+float min_security_distance <- 0.5 ;;;;;0;20;;;;;;;;;;;0;20
+float leading_distance <- nil ;;;;;0;20;;;;;;;;;;;0;20
+float proba_lane_change_down <- 1.0 ;;;;;0;20;;;;;;;;;;;0;20
+float proba_respect_priorities <- 1.0 ;;;;;0;20;;;;;;;;;;;0;20
+list<float> proba_respect_stops <- [] ;;;;;0;20;;;;;;;;;;;0;20
+[];;;;;0;60;;;;;;;;;;;0;60
+float min_safety_distance <- 0.5 ;;;;;0;20;;;;;;;;;;;0;20
+agent follower <- nil ;;;;;0;20;;;;;;;;;;;0;20
+agent leading_vehicle <- nil ;;;;;0;20;;;;;;;;;;;0;20
+int current_lane <- 0 ;;;;;0;20;;;;;;;;;;;0;20
+float speed_coeff <- 1.0 ;;;;;0;20;;;;;;;;;;;0;20
+float time_since_lane_change <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+bool violating_oneway <- false ;;;;;0;20;;;;;;;;;;;0;20
+int segment_index_on_road <- -1 ;;;;;0;20;;;;;;;;;;;0;20
+-1;;;;;0;40;;;;;;;;;;;0;40
+int lowest_lane <- 0 ;;;;;0;20;;;;;;;;;;;0;20
+int lane_change_limit <- 1 ;;;;;0;20;;;;;;;;;;;0;20
+float acc_gain_threshold <- 0.2 ;;;;;0;20;;;;;;;;;;;0;20
+float acc_bias <- 0.25 ;;;;;0;20;;;;;;;;;;;0;20
+float safety_distance_coeff <- 1.0 ;;;;;0;20;;;;;;;;;;;0;20
+int linked_lane_limit <- -1 ;;;;;0;20;;;;;;;;;;;0;20
+-1;;;;;0;40;;;;;;;;;;;0;40
+float time_headway <- 1.5 ;;;;;0;20;;;;;;;;;;;0;20
+float politeness_factor <- 0.5 ;;;;;0;20;;;;;;;;;;;0;20
+float distance_to_goal <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+float max_speed <- 50.0 ;;;;;0;20;;;;;;;;;;;0;20
+int num_lanes_occupied <- 1 ;;;;;0;20;;;;;;;;;;;0;20
+int current_index <- 0 ;;;;;0;20;;;;;;;;;;;0;20
+float delta_idm <- 4.0 ;;;;;0;20;;;;;;;;;;;0;20
+agent next_road <- nil ;;;;;0;20;;;;;;;;;;;0;20
+agent current_road <- nil ;;;;;0;20;;;;;;;;;;;0;20
+bool using_linked_road <- false ;;;;;0;20;;;;;;;;;;;0;20
+agent current_target <- nil ;;;;;0;20;;;;;;;;;;;0;20
+float distance_to_current_target <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+float max_deceleration <- 3.0 ;;;;;0;20;;;;;;;;;;;0;20
+float max_safe_deceleration <- 4 ;;;;;0;20;;;;;;;;;;;0;20
+float max_acceleration <- 0.3 ;;;;;0;20;;;;;;;;;;;0;20
+list<unknown> allowed_lanes <- [] ;;;;;0;20;;;;;;;;;;;0;20
+[];;;;;0;60;;;;;;;;;;;0;60
+float lane_change_cooldown <- 4 ;;;;;0;20;;;;;;;;;;;0;20
+float acceleration <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+bool ignore_oneway <- false ;;;;;0;20;;;;;;;;;;;0;20
+bool on_linked_road <- false ;;;;;0;20;;;;;;;;;;;0;20
+float vehicle_length <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+bool right_side_driving <- true ;;;;;0;20;;;;;;;;;;;0;20
+agent final_target <- nil ;;;;;0;20;;;;;;;;;;;0;20
+float proba_block_node <- 0.0 ;;;;;0;20;;;;;;;;;;;0;20
+rgb color ;;;;;0;20;;;;;;;;;;;0;20
+graph road_graph ;;;;;0;20;;;;;;;;;;;0;20
+point pos ;;;;;0;20;;;;;;;;;;;0;20
+bool entregado <- false ;;;;;0;20;;;;;;;;;;;0;20
+string operador ;;;;;0;20;;;;;;;;;;;0;20
+int num <- rnd(50) ;;;;;0;20;;;;;;;;;;;1;20
+rnd(50);;;;;0;20;;;;;;;;;;;1;20
+path follow (2 speed, 17 path, 10 move_weights, 3 return_path);;;;;;;;;;;;;;;;;;
+path goto (13 target, 2 speed, 0 on, 3 recompute_path, 3 return_path, 10 move_weights);;;;;;;;;;;;;;;;;;
+path move (2 speed, 2 heading, 13 bounds);;;;;;;;;;;;;;;;;;
+bool wander (2 speed, 2 amplitude, 13 bounds, 15 on, 10 proba_edges);;;;;;;;;;;;;;;;;;
+bool test_next_road (11 new_road);;;;;;;;;;;;;;;;;;
+float speed_choice (11 new_road);;;;;;;;;;;;;;;;;;
+float external_factor_impact (11 new_road, 2 remaining_time);;;;;;;;;;;;;;;;;;
+bool drive_random (15 graph, 10 proba_roads);;;;;;;;;;;;;;;;;;
+path path_from_nodes (15 graph, 5 nodes);;;;;;;;;;;;;;;;;;
+int lane_choice (11 new_road);;;;;;;;;;;;;;;;;;
+int choose_lane (11 new_road);;;;;;;;;;;;;;;;;;
+path compute_path (15 graph, 11 target, 11 source, 5 nodes);;;;;;;;;;;;;;;;;;
+bool drive ;;;;;;;;;;;;;;;;;;
+bool unregister ;;;;;;;;;;;;;;;;;;
+float advanced_follow_driving (17 path, 7 target, 2 speed, 2 time);;;;;;;;;;;;;;;;;;
+action on_entering_new_road ;;;;;;;;;;;;;;;;;;
+float force_move (1 lane, 2 acceleration, 2 time);;;;;;;;;;;;;;;;;;
+path goto_drive (13 target, 2 speed, 0 on, 3 recompute_path, 3 return_path, 17 following);;;;;;;;;;;;;;;;;;
+bool ready_to_cross (11 node, 11 new_road);;;;;;;;;;;;;;;;;;
+point compute_position ;;;;;;;;;;;;;;;;;;
+if current_road != nil ;;;;;;;;;;;;;;;;;;
+current_road != nil;;;;;;;;;;;;;;;;;;
+else ;;;;;;;;;;;;;;;;;;
+return point(0,0) ;;;;;;;;;;;;;;;;;;
+point(0,0);;;;;;;;;;;;;;;;;;
+let dist type: float value: (((road(current_road).num_lanes - current_lane) - mean(range(num_lanes_occupied - 1))) - 0.5) * lane_width ;;;;;;;;;;;;;;;;;;
+(((road(current_road).num_lanes - current_lane) - mean(range(num_lanes_occupied - 1))) - 0.5) * lane_width;;;;;;;;;;;;;;;;;;
+((road(current_road).num_lanes - current_lane) - mean(range(num_lanes_occupied - 1))) - 0.5;;;;;;;;;;;;;;;;;;
+(road(current_road).num_lanes - current_lane) - mean(range(num_lanes_occupied - 1));;;;;;;;;;;;;;;;;;
+road(current_road).num_lanes - current_lane;;;;;;;;;;;;;;;;;;
+road(current_road).num_lanes;;;;;;;;;;;;;;;;;;
+road(current_road);;;;;;;;;;;;;;;;;;
+mean(range(num_lanes_occupied - 1));;;;;;;;;;;;;;;;;;
+range(num_lanes_occupied - 1);;;;;;;;;;;;;;;;;;
+num_lanes_occupied - 1;;;;;;;;;;;;;;;;;;
+if violating_oneway ;;;;;;;;;;;;;;;;;;
+set dist value: -dist ;;;;;;;;;;;;;;;;;;
+-dist;;;;;;;;;;;;;;;;;;
+let shift_pt type: point value: point(cos(heading + 90) * dist,sin(heading + 90) * dist) ;;;;;;;;;;;;;;;;;;
+point(cos(heading + 90) * dist,sin(heading + 90) * dist);;;;;;;;;;;;;;;;;;
+cos(heading + 90) * dist;;;;;;;;;;;;;;;;;;
+cos(heading + 90);;;;;;;;;;;;;;;;;;
+heading + 90;;;;;;;;;;;;;;;;;;
+sin(heading + 90) * dist;;;;;;;;;;;;;;;;;;
+sin(heading + 90);;;;;;;;;;;;;;;;;;
+heading + 90;;;;;;;;;;;;;;;;;;
+return location + shift_pt ;;;;;;;;;;;;;;;;;;
+location + shift_pt;;;;;;;;;;;;;;;;;;
+aspect base ;;;;;;;;;;;0;140;0;120;;;;
+if current_road != nil ;;;;;;;;;;;0;140;0;120;;;;
+current_road != nil;;;;;;;;;;;0;140;0;120;;;;
+set pos value: self.compute_position() ;;;;;;;;;;;;;;;;;;
+self.compute_position();;;;;;;;;;;;;;;;;;
+draw rectangle(float(20),float(40)) border: #black delegate: msi.gaml.statements.draw.ShapeDrawer@337fd5e4 rotate: heading + 90 color: #yellow ;;;;;;;;;;;;;;;;;;
+heading + 90;;;;;;;;;;;;;;;;;;
+rectangle(float(20),float(40));;;;;;;;;;;;;;;;;;
+float(20);;;;;;;;;;;;;;;;;;
+float(40);;;;;;;;;;;;;;;;;;
+species vehicle_following_path parent: base_vehicle ;;;;;;;;;;;;;;;;;;
+list<vehicle_following_path> peers ;;;;;0;20;;;;;;;;;;;0;20
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;0;20;;;;;;;;;;;0;20
+-29;;;;;;;;;;;;;;;;;;
+point location ;;;;;0;20;;;;;;;;;;;0;20
+float timer <- 0.0 * #minute ;;;;;0;20;;;;;;;;;;;0;20
+0.0 * #minute;;;;;0;20;;;;;;;;;;;0;20
+float vehicle_max_speed ;;;;;0;20;;;;;;;;;;;0;20
+point destinoFinal <- pedidos[32] ;;;;;0;20;;;;;;;;;;;0;20
+pedidos[32];;;;;0;20;;;;;;;;;;;0;20
+[32];;;;;0;20;;;;;;;;;;;0;20
+init ;;;;;1;20;;;;;;;;;;;0;20
+set vehicle_length value: 1.9 * #m ;;;;;0;20;;;;;;;;;;;0;20
+1.9 * #m;;;;;0;20;;;;;;;;;;;0;20
+if rain ;;;;;1;20;;;;;;;;;;;0;20
+else ;;;;;1;20;;;;;;;;;;;0;20
+set max_speed value: 50 / 3600 ;;;;;1;20;;;;;;;;;;;0;20
+50 / 3600;;;;;1;20;;;;;;;;;;;0;20
+set max_speed value: 40 / 3600 ;;;;;;;;;;;;;;;;;;
+40 / 3600;;;;;;;;;;;;;;;;;;
+set max_acceleration value: 3.5 ;;;;;0;20;;;;;;;;;;;0;20
+reflex select_next_path when: current_path = nil ;;;;;;;;;;;;;;;;;;
+current_path = nil;;;;;;;;;;;;;;;;;;
+set dst_nodes value: [intersection[rnd(3017)],intersection(restaurantes[rnd(8)]),intersection(destinoFinal)] ;;;;;;;;;;;;;;;;;;
+[intersection[rnd(3017)],intersection(restaurantes[rnd(8)]),intersection(destinoFinal)];;;;;;;;;;;;;;;;;;
+intersection[rnd(3017)];;;;;;;;;;;;;;;;;;
+[rnd(3017)];;;;;;;;;;;;;;;;;;
+rnd(3017);;;;;;;;;;;;;;;;;;
+intersection(restaurantes[rnd(8)]);;;;;;;;;;;;;;;;;;
+restaurantes[rnd(8)];;;;;;;;;;;;;;;;;;
+[rnd(8)];;;;;;;;;;;;;;;;;;
+rnd(8);;;;;;;;;;;;;;;;;;
+intersection(destinoFinal);;;;;;;;;;;;;;;;;;
+do compute_path (nodes:dst_nodes, graph:road_network);;;;;;;;;;;;;;;;;;
+reflex commute when: current_path != nil ;;;;;;;;;;;;;;;;;;
+current_path != nil;;;;;;;;;;;;;;;;;;
+do drive ;;;;;;;;;;;;;;;;;;
+set timer value: timer + step ;;;;;;;;;;;;;;;;;;
+timer + step;;;;;;;;;;;;;;;;;;
+reflex stop when: current_path = nil ;;;;;;;;;;;;;;;;;;
+current_path = nil;;;;;;;;;;;;;;;;;;
+let t_final type: int value: int(timer / 60) ;;;;;;;;;;;;;;;;;;
+int(timer / 60);;;;;;;;;;;;;;;;;;
+timer / 60;;;;;;;;;;;;;;;;;;
+if t_final > 30 ;;;;;;;;;;;;;;;;;;
+t_final > 30;;;;;;;;;;;;;;;;;;
+else ;;;;;;;;;;;;;;;;;;
+set pedidosEntregados value: pedidosEntregados + 1 ;;;;;;;;;;;;;;;;;;
+pedidosEntregados + 1;;;;;;;;;;;;;;;;;;
+write ('Tiempo: ' + t_final) + ' minutos' ;;;;;;;;;;;;;;;;;;
+('Tiempo: ' + t_final) + ' minutos';;;;;;;;;;;;;;;;;;
+'Tiempo: ' + t_final;;;;;;;;;;;;;;;;;;
+set pedidosNoEntregados value: pedidosNoEntregados + 1 ;;;;;;;;;;;;;;;;;;
+pedidosNoEntregados + 1;;;;;;;;;;;;;;;;;;
+write 'Pedido no entregado' ;;;;;;;;;;;;;;;;;;
+set vehiculos value: vehiculos - 1 ;;;;;;;;;;;;;;;;;;
+vehiculos - 1;;;;;;;;;;;;;;;;;;
+do die ;;;;;;;;;;;;;;;;;;
+init ;;;;;325;1;;;;;;;;;;;303;1
+create road from: shp_roads with: [num_lanes::int(read('lanes'))];;;;;394;3467;;;;;;;;;;;336;3467
+create road ;;;;;212;6932;;;;;;;;;;;183;6932
+set num_lanes value: myself.num_lanes ;;;;;4;3466;;;;;;;;;;;4;3466
+myself.num_lanes;;;;;3;3466;;;;;;;;;;;3;3466
+set shape value: polyline(reverse(myself.shape.points)) ;;;;;27;3466;;;;;;;;;;;32;3466
+polyline(reverse(myself.shape.points));;;;;15;3466;;;;;;;;;;;16;3466
+reverse(myself.shape.points);;;;;12;3466;;;;;;;;;;;9;3466
+myself.shape.points;;;;;7;3466;;;;;;;;;;;6;3466
+myself.shape;;;;;2;3466;;;;;;;;;;;2;3466
+set maxspeed value: myself.maxspeed ;;;;;4;3466;;;;;;;;;;;3;3466
+myself.maxspeed;;;;;3;3466;;;;;;;;;;;2;3466
+set linked_road value: myself ;;;;;1;3466;;;;;;;;;;;0;3466
+set myself.linked_road value: self ;;;;;4;3466;;;;;;;;;;;5;3466
+myself.linked_road;;;;;;;;;;;;;;;;;;
+create intersection from: shp_nodes with: [is_traffic_signal::read('type') = 'traffic_signals'];;;;;60;3019;;;;;;;;;;;65;3019
+set time_to_change value: 260 * #sec ;;;;;0;3018;;;;;;;;;;;3;3018
+260 * #sec;;;;;0;3018;;;;;;;;;;;0;3018
+create restaurant from: restaurants_csv with: [lon::float(get('longitude')), nombre::string(get('location_name')), lat::float(get('latitude'))];;;;;1;10;;;;;;;;;;;1;10
+set location value: to_GAMA_CRS(point(lon,lat),'EPSG:4326').location ;;;;;0;9;;;;;;;;;;;0;9
+to_GAMA_CRS(point(lon,lat),'EPSG:4326').location;;;;;0;9;;;;;;;;;;;0;9
+to_GAMA_CRS(point(lon,lat),'EPSG:4326');;;;;0;9;;;;;;;;;;;0;9
+point(lon,lat);;;;;0;9;;;;;;;;;;;0;9
+add location to: restaurantes ;;;;;0;9;;;;;;;;;;;0;9
+create pedido from: pedidos_csv with: [lon::float(get('lon')), lat::float(get('lat'))];;;;;1;34;;;;;;;;;;;3;34
+set location value: to_GAMA_CRS(point(lon,lat),'EPSG:4326').location ;;;;;0;33;;;;;;;;;;;1;33
+to_GAMA_CRS(point(lon,lat),'EPSG:4326').location;;;;;0;33;;;;;;;;;;;1;33
+to_GAMA_CRS(point(lon,lat),'EPSG:4326');;;;;0;33;;;;;;;;;;;1;33
+point(lon,lat);;;;;0;33;;;;;;;;;;;0;33
+add location to: pedidos ;;;;;0;33;;;;;;;;;;;0;33
+let edge_weights type: map value: road as_map (each :: each.shape.perimeter) ;;;;;7;1;;;;;;;;;;;7;1
+road as_map (each :: each.shape.perimeter);;;;;7;1;;;;;;;;;;;7;1
+each :: each.shape.perimeter;;;;;;;;;;;;;;;;;;
+each.shape.perimeter;;;;;4;6932;;;;;;;;;;;6;6932
+each.shape;;;;;0;6932;;;;;;;;;;;4;6932
+set road_network value: with_weights(as_driving_graph(road,intersection),edge_weights) ;;;;;15;1;;;;;;;;;;;18;1
+with_weights(as_driving_graph(road,intersection),edge_weights);;;;;15;1;;;;;;;;;;;18;1
+as_driving_graph(road,intersection);;;;;14;1;;;;;;;;;;;16;1
+ask intersection ;;;;;24;3019;;;;;;;;;;;22;3019
+do initialize ;;;;;11;3018;;;;;;;;;;;11;3018
+create vehicle_following_path number: vehiculos with: [vehicle_max_speed::vehicle_speed_limit];;;;;2;1;;;;;;;;;;;2;1
+experiment 'city_rain' type: 'gui' title: 'Experiment city_rain' benchmark: true ;;;;;;;;;;;;;;;;;;
+list<city_rain> peers ;;;;;;;;;;;;;;;0;1;;
+-199;;;;;;;;;;;;;;;;;;
+FollowingPaths_model host ;;;;;;;;;;;;;;;0;1;;
+-29;;;;;;;;;;;;;;;;;;
+list<FollowingPaths_model> simulations ;;;;;;;;;;;;;;;0;1;;
+-27;;;;;;;;;;;;;;;;;;
+FollowingPaths_model simulation ;;;;;;;;;;;;;;;0;1;;
+-27;;;;;;;;;;;;;;;;;;
+float seedValue <- 10.0 ;;;;;;;;;;;;;;;0;1;;
+float seed <- seedValue ;;;;;;;;;;;;;;;0;1;;
+init ;650;1;;;;;;;;;;;;;;;;
+create simulation with: [seed::seedValue];650;1;;;;;;;;;;;;;;;;
+parameter 'rain' <- false var: rain ;;;;;;;;;;;;;;;;;;
+output synchronized: true ;;;;;;;;;;;;;;;;;;
+display 'map' type: '2d' background: rain ? #green : #grey ;;;;;0;2;;;;;;;;;;;2;2
+rain ? #green : #grey;;;0;3;;;0;4;;;;;;;;;;
+#green : #grey;;;;;;;;;;;;;;;;;;
+species road aspect: base ;;;0;2;;;0;2;;;;;;;;;;
+species vehicle_following_path aspect: base ;;;0;2;;;0;2;;;;;;;;;;
+species intersection aspect: base ;;;0;2;;;0;2;;;;;;;;;;
+species restaurant aspect: base ;;;0;2;;;0;2;;;;;;;;;;
+species pedido aspect: base ;;;0;2;;;0;2;;;;;;;;;;
+permanent ;;;;;;;;;;;;;;;;;;
+display 'chart_display' refresh: every(10 * #cycle) type: '2d' ;5;2;;;;;;;;;;;;;;;;
+every(10 * #cycle);;;;;;;;;;;;;;;;;;
+10 * #cycle;;;;;;;;;;;;;;;;;;
+chart 'Entrega de Pedidos' position: point(0,0) type: series size: point(1,0.5) ;;;;;;;;;4;2;;;;;;;;
+point(0,0);;;;;;;;;;;;;;;;;;
+point(1,0.5);;;;;;;;;;;;;;;;;;
+data 'Pedidos' style: line color: #green value: pedidosEntregados ;;;;;;;;;0;1;;;;;;;;
+data 'Pedidos No entregados' style: line color: #red value: pedidosNoEntregados ;;;;;;;;;0;1;;;;;;;;
