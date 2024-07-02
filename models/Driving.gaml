@@ -91,10 +91,10 @@ species vehicle_following_path parent: base_vehicle {
 		int t_final <- (timer / 60) as int;
 		if (t_final > 30) {
 			pedidosNoEntregados <- pedidosNoEntregados + 1;
-			write ("Pedido no entregado");
+			write ("Pedido retrasados");
 		} else {
 			pedidosEntregados <- pedidosEntregados + 1;
-			write ("Tiempo: " + t_final + " minutos");
+			write ("Tiempo de entrega: " + t_final + " minutos");
 		}
 
 		vehiculos <- vehiculos - 1;
@@ -104,7 +104,7 @@ species vehicle_following_path parent: base_vehicle {
 }
 
 experiment city_rain type: gui {
-	parameter var: rain init: false;
+//	parameter var: rain init: false;
 	float seedValue <- 10.0;
 	float seed <- seedValue; // force the value of the seed.
 	init {
@@ -123,8 +123,8 @@ experiment city_rain type: gui {
 
 		display chart_display refresh: every(10 #cycles) type: 2d {
 			chart "Entrega de Pedidos" type: pie style:exploded size: {1, 0.5} position: {0, 0} {
-				data "Pedidos" value: pedidosEntregados  color: #green;
-				data "Pedidos No entregados" value: pedidosNoEntregados color: #red;
+				data "Pedidos a tiempo" value: pedidosEntregados  color: #green;
+				data "Pedidos Retrasados" value: pedidosNoEntregados color: #red;
 			}
 
 		}
