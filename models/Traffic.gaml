@@ -35,6 +35,7 @@ species pedido {
 
 	aspect base {
 		draw circle(30) color: #blue;
+		draw string("Casa") color: #black font: font("SansSerif", 5, #bold);
 	}
 	aspect entregado {
 		draw circle(30) color: #green;
@@ -170,6 +171,7 @@ species base_vehicle skills: [driving] {
 		if (current_road != nil) {
 			pos <- compute_position();
 			draw rectangle(20, 40) color: #yellow rotate: heading + 90 border: #black;
+			draw string("Repartidor") color: #yellow font: font("SansSerif", 10, #bold);
 		}
 
 	}

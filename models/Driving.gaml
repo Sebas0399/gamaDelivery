@@ -18,7 +18,7 @@ global {
 	bool rain;
 	int pedidosEntregados <- 0;
 	int pedidosNoEntregados <- 0;
-	int vehiculos <- 50;
+	int vehiculos <- 10;
 
 	init {
 		create road from: shp_roads with: [num_lanes::int(read("lanes"))] {
@@ -66,7 +66,6 @@ species vehicle_following_path parent: base_vehicle {
 
 	init {
 		vehicle_length <- 1.9 #m;
-		write (rain);
 		if (rain) {
 			max_speed <- 40 / 3600;
 			max_acceleration <- 3.0;
@@ -91,20 +90,27 @@ species vehicle_following_path parent: base_vehicle {
 		int t_final <- (timer / 60) as int;
 		if (t_final > 30) {
 			pedidosNoEntregados <- pedidosNoEntregados + 1;
-			write ("Pedido retrasados");
+			write (rain?"Día lluvioso -> Pedido retrasado: "+ t_final + " minutos":"Día despejado -> Pedido retrasado: "+ t_final + " minutos");
 		} else {
 			pedidosEntregados <- pedidosEntregados + 1;
-			write ("Tiempo de entrega: " + t_final + " minutos");
+			write (rain?"Día lluvioso -> Pedido a tiempo: " + t_final + " minutos":"Día despejado -> Pedido a tiempo: " + t_final + " minutos");
 		}
 
+		write(rain?"------- Día lluvioso -------\n - Pedidos entregados: "
+			+pedidosEntregados+"\n - Pedidos No entregados: "
+			+pedidosNoEntregados+"\n----------------------------":
+			"------- Día despejado -------\n - Pedidos entregados: "
+			+pedidosEntregados+"\n - Pedidos No entregados: "
+			+pedidosNoEntregados+"\n----------------------------"
+		);
 		vehiculos <- vehiculos - 1;
 		do die;
+		
 	}
 
 }
 
 experiment city_rain type: gui {
-//	parameter var: rain init: false;
 	float seedValue <- 10.0;
 	float seed <- seedValue; // force the value of the seed.
 	init {
@@ -122,9 +128,8 @@ experiment city_rain type: gui {
 		}
 
 		display chart_display refresh: every(10 #cycles) type: 2d {
-			chart "Entrega de Pedidos" type: pie style:exploded size: {1, 0.5} position: {0, 0} {
-				data "Pedidos a tiempo" value: pedidosEntregados  color: #green;
-				data "Pedidos Retrasados" value: pedidosNoEntregados color: #red;
+			chart rain?"Entregas en día lluvioso":"Entregas en día despejado" type: pie style:exploded size: {1, 0.5} position: {0, 0} {
+				datalist ["Pedidos a tiempo","Pedidos retrasados"] value:  [pedidosEntregados,pedidosNoEntregados] color: [#green,#red] ;
 			}
 
 		}
